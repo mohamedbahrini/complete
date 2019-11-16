@@ -1,12 +1,11 @@
 package com.training.complete.model;
 
+import com.training.complete.listener.JpaListener;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +13,8 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "users")
-public class User {
+@EntityListeners(JpaListener.class)
+public class User extends Audit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,16 +24,13 @@ public class User {
     private String firstname;
     @Column
     private String lastname;
+    @NaturalId
     @Column
     private String email;
     @Column
     private boolean enabled;
     @Column
     private String password;
-    @CreatedDate
-    private LocalDate createdAt;
-    @LastModifiedDate
-    private LocalDate lastModified;
     @ManyToMany
     @JoinTable(
             name = "users_roles",
