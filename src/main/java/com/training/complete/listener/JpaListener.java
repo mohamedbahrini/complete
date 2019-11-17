@@ -3,30 +3,52 @@ package com.training.complete.listener;
 import com.training.complete.model.Audit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import javax.persistence.*;
 
 public class JpaListener<T extends Audit> {
     private final static Logger LOGGER = LoggerFactory.getLogger(JpaListener.class);
 
     @PrePersist
-    public void beforePersisting(T entity) {
-        String connectedUser = getUserName();
-        LOGGER.info("connected user {}", connectedUser);
-        entity.setCreatedBy(connectedUser);
-        entity.setLastModifiedBy(connectedUser);
+    void onPrePersist(T entity) {
+        //ContextWrapper.getContext().getBean(AUDIT_REPOSITORY, AuditRepository.class);
+        LOGGER.info("@PrePersist {}", entity.getClass());
+    }
+
+    @PostPersist
+    void onPostPersist(T entity) {
+        //ContextWrapper.getContext().getBean(AUDIT_REPOSITORY, AuditRepository.class);
+        LOGGER.info("@PostPersist {}", entity.getClass());
+    }
+
+    @PostLoad
+    void onPostLoad(T entity) {
+        //ContextWrapper.getContext().getBean(AUDIT_REPOSITORY, AuditRepository.class);
+        LOGGER.info("@PostLoad {}", entity.getClass());
     }
 
     @PreUpdate
-    public void beforeUpdating(T entity) {
-        entity.setLastModifiedBy(getUserName());
+    void onPreUpdate(T entity) {
+        //ContextWrapper.getContext().getBean(AUDIT_REPOSITORY, AuditRepository.class);
+        LOGGER.info("@PreUpdate {}", entity.getClass());
     }
 
-    private String getUserName() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication !=null ? authentication.getName() : "system";
+    @PostUpdate
+    void onPostUpdate(T entity) {
+        //ContextWrapper.getContext().getBean(AUDIT_REPOSITORY, AuditRepository.class);
+        LOGGER.info("@PostUpdate {}", entity.getClass());
     }
+
+    @PreRemove
+    void onPreRemove(T entity) {
+        //ContextWrapper.getContext().getBean(AUDIT_REPOSITORY, AuditRepository.class);
+        LOGGER.info("@PreRemove {}", entity.getClass());
+    }
+
+    @PostRemove
+    void onPostRemove(T entity) {
+        //ContextWrapper.getContext().getBean(AUDIT_REPOSITORY, AuditRepository.class);
+        LOGGER.info("@PostRemove {}", entity.getClass());
+    }
+
 }
