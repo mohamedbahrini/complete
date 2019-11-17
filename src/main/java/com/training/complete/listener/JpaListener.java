@@ -27,6 +27,6 @@ public class JpaListener<T extends Audit> {
 
     private String getUserName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getName();
+        return authentication !=null ? authentication.getName() : "system";
     }
 }

@@ -2,6 +2,7 @@ package com.training.complete.model;
 
 import com.training.complete.listener.JpaListener;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -16,6 +17,7 @@ import java.util.Set;
 @Setter
 @Table(name = "roles")
 @EntityListeners(JpaListener.class)
+@NoArgsConstructor
 public class Role extends Audit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,4 +25,8 @@ public class Role extends Audit {
     private RoleName roleName;
     @ManyToMany(mappedBy = "roles")
     Set<User> users = new HashSet<>();
+
+    public Role(RoleName roleName) {
+        this.roleName = roleName;
+    }
 }
