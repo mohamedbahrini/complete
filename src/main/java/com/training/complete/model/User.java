@@ -2,6 +2,7 @@ package com.training.complete.model;
 
 import com.training.complete.listener.JpaListener;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
 
@@ -12,6 +13,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "users")
 @EntityListeners(JpaListener.class)
 public class User extends Audit {
@@ -38,4 +40,14 @@ public class User extends Audit {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    public User(String username, String firstname, String lastname, String email, boolean enabled, String password, Set<Role> roles) {
+        this.username = username;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.enabled = enabled;
+        this.password = password;
+        this.roles = roles;
+    }
 }

@@ -5,7 +5,11 @@ import com.training.complete.model.User;
 import java.util.List;
 
 public interface UserService {
-    public User saveUser(User user);
+    User saveUser(User user);
 
-    public List<User> getAllUsers();
+    List<User> getAllUsers();
+
+    boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
 }

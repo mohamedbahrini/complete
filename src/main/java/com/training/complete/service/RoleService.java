@@ -1,11 +1,15 @@
 package com.training.complete.service;
 
 import com.training.complete.model.Role;
+import com.training.complete.model.RoleName;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RoleService {
-    public Role saveRole(Role role);
+    Role saveRole(Role role);
 
-    public List<Role> getAllRoles();
+    List<Role> getAllRoles();
+
+    Optional<Role> getRoleByName(RoleName roleUser);
 }
