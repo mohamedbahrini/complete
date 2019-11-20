@@ -22,6 +22,7 @@ public class Role extends Audit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Enumerated(EnumType.STRING)
     private RoleName roleName;
     @ManyToMany(mappedBy = "roles")
     Set<User> users = new HashSet<>();

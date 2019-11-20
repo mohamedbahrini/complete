@@ -1,5 +1,7 @@
 package com.training.complete.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,51 +18,45 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private UserDetailsService userDetailsService;
-    private TokenProvider tokenProvider;
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
-    @Value("${prefix}")
+    @Autowired
+    private JwtTokenProvider tokenProvider;
+
+    @Autowired
+    private UserDetailsService customUserDetailsService;
+
+    @Value("${token.prefix}")
     private String prefix;
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = extractTokenFromRequest(request);
-        if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
-            try {
-                String username = tokenProvider.getUsernameFromToken(token);
+        try {
+            String token = getJwtFromRequest(request);
 
-                // create UsernamePasswordAuthenticationToken from userDetails
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
+                String userName = tokenProvider.getUserNameFromJWT(token);
 
-                // set the usernamePasswordAuthenticationToken in the SecurityContextHolder
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            } catch (Exception ex) {
-                logger.error("Could not set user authentication in security context", ex);
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(userName);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-
-            filterChain.doFilter(request, response);
+        } catch (Exception ex) {
+            logger.error("Could not set user authentication in security context", ex);
         }
+
+        filterChain.doFilter(request, response);
     }
 
-    private String extractTokenFromRequest(HttpServletRequest request) {
+    private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(prefix)) {
-            return bearerToken.substring(prefix.length());
+            return bearerToken.substring(prefix.length(), bearerToken.length());
         }
         return null;
-    }
-
-    @Autowired
-    public void setUserDetailsService(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
-
-    @Autowired
-    public void setTokenProvider(TokenProvider tokenProvider) {
-        this.tokenProvider = tokenProvider;
     }
 }
