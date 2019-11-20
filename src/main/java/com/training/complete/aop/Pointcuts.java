@@ -4,11 +4,11 @@ import org.aspectj.lang.annotation.Pointcut;
 
 
 public class Pointcuts {
-    @Pointcut(value = "execution(* com.training.complete.controller.UserController.subscribe(..))")
+    @Pointcut(value = "execution(* com.training.complete.controller.UserController.registerUser(..))")
     public void subscribeEvents() {
     }
 
-    @Pointcut(value = "execution(* com.training.complete.controller.UserController.login(..))")
+    @Pointcut(value = "execution(* com.training.complete.controller.AuthenticationController.authenticateUser(..))")
     public void loginEvents() {
     }
 

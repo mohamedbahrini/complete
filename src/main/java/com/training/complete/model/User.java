@@ -1,5 +1,6 @@
 package com.training.complete.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.training.complete.listener.JpaListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,8 @@ public class User extends Audit {
     private boolean enabled;
     @Column
     private String password;
+
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "users_roles",

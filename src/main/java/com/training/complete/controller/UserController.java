@@ -17,6 +17,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -50,8 +51,13 @@ public class UserController {
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
     }
 
-    @GetMapping("/help")
-    public String help(){
-        return "help";
+    @GetMapping("/find")
+    public List<User> findUsers(@RequestParam String search){
+        return userService.findUsers(search);
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return "success test";
     }
 }
