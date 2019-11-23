@@ -3,7 +3,6 @@ package com.training.complete.init;
 import com.training.complete.model.Role;
 import com.training.complete.model.RoleName;
 import com.training.complete.model.User;
-import com.training.complete.repository.UserRepository;
 import com.training.complete.service.RoleService;
 import com.training.complete.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,7 @@ public class InitDatabase implements CommandLineRunner {
         roleNames.forEach(roleName -> roleService.saveRole(new Role(roleName)));
     }
 
-    void createUser(){
+    void createUser() {
         User user = new User();
         user.setUsername("mohamed");
         user.setFirstname("mohamed");
@@ -48,4 +47,5 @@ public class InitDatabase implements CommandLineRunner {
 
         userService.saveUser(user);
     }
+
 }
