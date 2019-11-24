@@ -10,14 +10,14 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class WebSocketChatController {
-    @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/javainuse")
+    @MessageMapping("/sendMessage")
+    @SendTo("/topic/users")
     public WebSocketChatMessage sendMessage(@Payload WebSocketChatMessage webSocketChatMessage) {
         return webSocketChatMessage;
     }
 
-    @MessageMapping("/chat.newUser")
-    @SendTo("/topic/javainuse")
+    @MessageMapping("/newUser")
+    @SendTo("/topic/users")
     public WebSocketChatMessage newUser(@Payload WebSocketChatMessage webSocketChatMessage,
                                         SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("username", webSocketChatMessage.getSender());
